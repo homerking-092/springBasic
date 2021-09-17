@@ -11,8 +11,9 @@
 	<form action="/board/register" method="post">
 		<input type="text" name="title" placeholder="제목"><br>
 		<textarea rows="10" cols="30" name="content" placeholder="내용"></textarea> <br>
-		<input type="text" name="writer" placeholder="글쓴이"> 
+		<input type="text" name="writer" placeholder="글쓴이"><br> 
 		<input type="submit" value="확인">
+	<a href="/board/list"><input type="button" value="목록으로"></a>
 	</form>
 </body>
 </html>

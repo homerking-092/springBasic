@@ -21,10 +21,12 @@ public interface BoardService {
 	// 글 수정
 	public void modify(BoardVO vo);
 	
+	public void insertSelectKey(BoardVO vo);
+	
 	// 글 삭제
 	public void remove(Long bno);
 	
 	// 전체 글 목록
-	public List<BoardVO> getList();
+	public List<BoardVO> getList(String keyword);
 	
 }

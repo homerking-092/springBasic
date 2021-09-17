@@ -50,7 +50,7 @@ public class BoardServiceTests {
 	
 //	@Test
 	public void testGetList() {
-		service.getList();
+		service.getList(null);
 	}
 	
 //	@Test

@@ -29,7 +29,7 @@ public class BoardMapperTests {
 //	@Test
 	public void testGetList() {
 		// mapper 내부의 getList 메서드를 호출하려면
-		log.info(mapper.getList());
+		log.info(mapper.getList(null));
 	}//
 	
 	// insert를 실행할 테스트코드를 하단에 작성
@@ -48,7 +48,7 @@ public class BoardMapperTests {
 		vo.setContent("aaaa");
 		vo.setWriter("aaaa");
 		
-		mapper.insert(vo);
+		mapper.insertSelectKey(vo);
 		
 	}//
 	

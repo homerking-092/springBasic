@@ -63,9 +63,9 @@ public class BoardControllerTests {
 		// 결과 메세지는 문자열 resultPage에 저장해두고
 		String resultPage = mockMvc.perform(
 				MockMvcRequestBuilders.post("/board/register")
-				.param("title", "테스트코드 제목")
-				.param("content", "테스트코드 본문")
-				.param("writer", "테스트코드 글쓴이")
+				.param("title", "제목이야")
+				.param("content", "본문이야")
+				.param("writer", "글쓴이야")
 				).andReturn().getModelAndView().getViewName();
 		
 		// 변수에 저장된 값을 다시 로길을 해서 출력합니다
@@ -77,7 +77,7 @@ public class BoardControllerTests {
 	// 참고로 .param()으로 전달하는 자료는 자료형을 막론하고 무조건
 	// ""로 감싸서 문자화 시켜야하는데 이유는
 	// url에는 자료형 구분이 없고 오직 String뿐이기 떄문입니다
-	@Test
+//	@Test
 	public void testGet() throws Exception {
 		String resultGet = mockMvc.perform(
 				MockMvcRequestBuilders.get("/board/get")
@@ -86,5 +86,42 @@ public class BoardControllerTests {
 		
 		log.info(resultGet);
 	}
+	
+//	@Test
+	public void testDelete() throws Exception {
+		String resultDelete = mockMvc.perform(
+				MockMvcRequestBuilders.post("/board/remove")
+				.param("bno", "7")
+				).andReturn().getModelAndView().getViewName();
+		
+		log.info(resultDelete);
+	}
+	
+	@Test
+	public void testModify() throws Exception {
+		
+		// 실제로 실행될 쿼리문과 비교해서 데이터를 날려주면 됩니다
+		// 현재 수정로직은 bno를 WHERE절의 조건으로,
+		// title, content, writer를 수정내역으로 받으니
+		// 파라미터도 위 4개 항목을 전달해줍니다
+		String restultModify = mockMvc.perform(
+				MockMvcRequestBuilders.post("/board/modify")
+				.param("title", "수정제목")
+				.param("content", "수정내용")
+				.param("writer", "수정글쓴이")
+				.param("bno", "11")
+				).andReturn().getModelAndView().getViewName();
+		
+		log.info(restultModify);
+		
+	}
 
+	
+	
+	
+	
+	
+	
+	
+	
 }
