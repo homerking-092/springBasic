@@ -55,7 +55,8 @@ public class BoardController {
 		// model.addAttribute()를 쓴다면
 		// 일반 이동이 아닌 redirect 이동시는 데이터가 소실됩니다
 		// 이를 막기 위해 rttr.addFlashAttribute로 대체합니다
-		rttr.addFlashAttribute("result", vo.getBno());
+		rttr.addFlashAttribute("bno", vo.getBno());
+		rttr.addFlashAttribute("success", "register");
 		
 		// views 폴더 하위 board폴더의 list.jsp 출력
 		// redirect로 이동시킬때는 "redirect:파일명"
@@ -108,7 +109,7 @@ public class BoardController {
 	public String remove(Long bno, RedirectAttributes rttr) {
 		log.info("삭제 로직: " + bno);
 		service.remove(bno);
-		rttr.addFlashAttribute("success", "success");	// success라는 왼쪽 문자열 변수에 오른쪽 success 문자열에 담아 ㅍㅇㄷ
+		rttr.addFlashAttribute("success", "delete");	// success라는 왼쪽 문자열 변수에 오른쪽 success 문자열에 담아 ㅍㅇㄷ
 		
 		// X번 글이 삭제되었습니다 라고 메세지를 띄우도록
 		// bno 정보를 list.jsp에 같이 넘겨주시고 메세지도 수정
