@@ -3,6 +3,7 @@ package org.ict.service;
 import static org.junit.Assert.assertNotNull;
 
 import org.ict.domain.BoardVO;
+import org.ict.domain.Criteria;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class BoardServiceTests {
 	
 //	@Test
 	public void testGetList() {
-		service.getList(null);
+		service.getList("");
 	}
 	
 //	@Test
@@ -61,7 +62,7 @@ public class BoardServiceTests {
 	public void testDelete() {
 		service.remove(1L);
 	}
-	@Test
+//	@Test
 	public void testUpdate() {
 		// 수정로직은 수정사항 정보를 BoardVO에 담아서
 		// 전달하기 때문에 BoardVo를 만들어놓고 자료를 저장한 뒤 실행
@@ -71,9 +72,13 @@ public class BoardServiceTests {
 		vo.setWriter("modify");
 		vo.setBno(2L);
 		service.modify(vo);
-		
-		
 	}
 		
 		
+	@Test
+	public void testPaging() {
+		Criteria cri =new Criteria(200, 20);
+		
+		service.getListPaging(cri);
+	}
 }

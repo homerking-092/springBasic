@@ -10,56 +10,65 @@
 		단일자료와 리스트자료를 구분하지 않기 떄문에 resultType에는 List<> 자료형도 아래와 같이 단일 VO만 적어주면 됩니다 -->
 
 	<select id="getList" resultType="org.ict.domain.BoardVO">
-	<!-- < or > 과 같이 태그로 오인될 수 있는 문자를 포함하는
-	쿼리문은 그냥 작성하지 않고, CDATA를 이용합니다
-	아래와 같이 <![CDATA[ 실행문 ] ]> 과 같이 실행문을
-	CDATA 내부에 작성하면 내부의 부등호는 전부 문자로 간주됩니다 
-	쿼리문에서 like절을 사용하는 경우 #{변수명} 대신
-	'%'||#{변수명}||'%' 를 사용합니다(oracle)
-	CONCAT('%', #{변수명}, '%') (MySQL)-->
+		<!-- < or > 과 같이 태그로 오인될 수 있는 문자를 포함하는 쿼리문은 그냥 작성하지 않고, CDATA를 이용합니다 아래와 
+			같이 <![CDATA[ 실행문 ] ]> 과 같이 실행문을 CDATA 내부에 작성하면 내부의 부등호는 전부 문자로 간주됩니다 쿼리문에서 
+			like절을 사용하는 경우 #{변수명} 대신 '%'||#{변수명}||'%' 를 사용합니다(oracle) CONCAT('%', #{변수명}, 
+			'%') (MySQL) -->
 		<![CDATA[
 		SELECT * FROM board_tbl WHERE title LIKE '%'||#{Keyword}||'%' ORDER BY bno DESC
 		]]>
 	</select>
-	
-	<!-- 현재 insert는 BoardVO를 파라미터로 받고 있습니다
-	이 경우, VO 내부 변수를 #{변수명} 으로 쿼리문에 전달할 수 있습니다
-	${변수명} 이 아님에 주의 -->
-	<insert id="insert" >
-		INSERT INTO board_tbl (bno, title, content, writer) VALUES (board_num.nextval, #{title}, #{content}, #{writer})
+
+	<!-- 현재 insert는 BoardVO를 파라미터로 받고 있습니다 이 경우, VO 내부 변수를 #{변수명} 으로 쿼리문에 전달할 
+		수 있습니다 ${변수명} 이 아님에 주의 -->
+	<insert id="insert">
+		INSERT INTO board_tbl (bno, title, content,
+		writer) VALUES (board_num.nextval, #{title}, #{content}, #{writer})
 	</insert>
-	
-	<!-- 위의 insert 메서드는 쿼리문을 한번만 실행해도 데이터가 입력되지만
-		 단점이라면 bno에 들어갈 값을 미리 확인할 수 없습니다
-		 bno에 들어갈 값을 확인할 수 있도록 insert 실행 이전에
-		 bno값을 외부에서 조회할 수 있도록 변수화 시키는 작업이 필요합니다
-		 그 작업을 할때 사용하는 태그가 바로 selectKey 태그입니다 -->
-		 <insert id="insertSelectKey">
-		 	<!-- 실헹 이전에 bno값을 먼저 조회해서 bno 변수명으로 저장 -->
-		 	<selectKey keyProperty="bno" order="BEFORE" resultType="long">		 
-		 		SELECT board_num.nextval FROM DUAL	
-		 	</selectKey>
-		 		INSERT INTO board_tbl (bno, title, content, writer)
-		 		VALUES (#{bno}, #{title}, #{content}, #{writer})
-		 </insert>
-	
-	<!-- select 메서드 연결
-	resultType은 리스트랑 개별자료형을 구분하지 않기 떄문에
-	BoardVO로 처리 -->
+
+	<!-- 위의 insert 메서드는 쿼리문을 한번만 실행해도 데이터가 입력되지만 단점이라면 bno에 들어갈 값을 미리 확인할 수 
+		없습니다 bno에 들어갈 값을 확인할 수 있도록 insert 실행 이전에 bno값을 외부에서 조회할 수 있도록 변수화 시키는 작업이 
+		필요합니다 그 작업을 할때 사용하는 태그가 바로 selectKey 태그입니다 -->
+	<insert id="insertSelectKey">
+		<!-- 실헹 이전에 bno값을 먼저 조회해서 bno 변수명으로 저장 -->
+		<selectKey keyProperty="bno" order="BEFORE"
+			resultType="long">
+			SELECT board_num.nextval FROM DUAL
+		</selectKey>
+		INSERT INTO board_tbl (bno, title, content, writer)
+		VALUES (#{bno}, #{title}, #{content}, #{writer})
+	</insert>
+
+	<!-- select 메서드 연결 resultType은 리스트랑 개별자료형을 구분하지 않기 떄문에 BoardVO로 처리 -->
 	<select id="select" resultType="org.ict.domain.BoardVO">
-		SELECT * FROM board_tbl WHERE bno = #{bno}
+		SELECT * FROM board_tbl WHERE bno
+		= #{bno}
 	</select>
-	
+
 	<delete id="delete">
 		DELETE FROM board_tbl WHERE bno = #{bno}
 	</delete>
-	
+
 	<update id="update">
-		UPDATE board_tbl 
-		SET title = #{title}, content = #{content}, writer = #{writer}, updatedate = sysdate
+		UPDATE board_tbl
+		SET title = #{title}, content = #{content}, writer = #{writer},
+		updatedate = sysdate
 		WHERE bno = #{bno}
 	</update>
-	
-	
-	
+
+	<!-- getListPaging -->
+	<select id="getListPaging"
+		resultType="org.ict.domain.BoardVO">
+		<!-- *로 조회하면 rn까지 포함하므로 깜끔하게 rn 없이 조회 하도록
+		조회 컬럼을 다시 작성합니다 -->
+		<![CDATA[
+		SELECT bno, title, content, writer, regdate, updatedate FROM
+		(SELECT /*+ INDEX_DESC(board_tbl pk_board) */
+		ROWNUM rn, board_tbl.* FROM board_tbl 
+		WHERE ROWNUM <= #{pageNum} * #{amount}) tbl
+		WHERE rn > (#{pageNum}-1) * #{amount}	
+		]]>
+	</select>
+
+
 </mapper>

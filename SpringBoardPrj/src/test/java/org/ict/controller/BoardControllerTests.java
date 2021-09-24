@@ -97,7 +97,7 @@ public class BoardControllerTests {
 		log.info(resultDelete);
 	}
 	
-	@Test
+//	@Test
 	public void testModify() throws Exception {
 		
 		// 실제로 실행될 쿼리문과 비교해서 데이터를 날려주면 됩니다
@@ -112,10 +112,25 @@ public class BoardControllerTests {
 				.param("bno", "11")
 				).andReturn().getModelAndView().getViewName();
 		
+		// 변수에 저장된 값을 다시 로깅해서 출력
 		log.info(restultModify);
 		
 	}
 
+	@Test
+	public void testGetListPaging() throws Exception {
+		
+		// get 방식 접속
+		// .param을 이용해 creteria 관련정보 전달
+		String resultPaging = mockMvc.perform(
+				MockMvcRequestBuilders.get("/board/list")
+				.param("pageNum", "10")
+				.param("amount", "20")
+				).andReturn().getModelAndView().getViewName();
+				
+		log.info(resultPaging);
+		
+	}
 	
 	
 	
