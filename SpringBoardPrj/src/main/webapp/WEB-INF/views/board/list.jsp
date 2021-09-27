@@ -16,7 +16,7 @@
 <body>
 	<h1>전체 게시글 조회</h1>
 	
-	<a href="/board/register"><input type="button" value="글쓰기"></a>
+	<a href="/board/register"><input type="button" value="글쓰기" style="float: right;"></a>
 	<table
 		class="table table-secondary table-striped table-sm table-striped table-hover">
 		<tr>
@@ -36,11 +36,52 @@
 			</tr>
 		</c:forEach>
 	</table>
+	
+	<%-- 페이지네이션 버튼위치
+	페이지네이션 버튼을 상황에 맞게 출력하기 위해
+	c 태그 라이브러리의 조건식을 활용합니다 --%>
+	<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center" >
+  
+  	<!-- prev 버튼 
+  	btnMaker의 prev가 true일떄만 뒤로가기 버튼 출력-->
+  	<c:if test="${btnMaker.prev }">
+  		<li class="page-item">
+      <a class="page-link" href="/board/list?pageNum=${btnMaker.startPage -1 }" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+  	</c:if>
+    
+    
+    <!-- 번호 버튼
+    c태그의 foreach 기능을 쓰되, begin, end속성을 이용해서
+    startPage부터 endPage까지의 숫자들이 버튼으로 나열
+    begin, end에 따른 루프 바퀴에 따른 변수명은 var속성으로 지정-->
+    <!-- 1. 버튼이 갯수에 맞는지 확인 -->
+    <!-- 2. 각 바퀴수별로 다른 수치를 버튼에 새기기 위해 var 속성에 변수명 적고 출력 -->
+    <c:forEach var="pageNum" begin="${btnMaker.startPage }" end="${btnMaker.endPage }">
+    <!-- 3. 현재 조회중 페이지 강조는 class 속성 내에서 삼항연산자를 이용해도 된다 -->
+    <li class="page-item ${btnMaker.cri.pageNum == pageNum ? 'active' : ''}">
+    <a class="page-link" href="/board/list?pageNum=${pageNum }">${pageNum }</a>
+    </li>
+    </c:forEach>
+    
+    <!-- next 버튼 -->
+    <c:if test="${btnMaker.next }">
+    <li class="page-item">
+      <a class="page-link" href="/board/list?pageNum=${btnMaker.endPage + 1 }" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+    </c:if>
+  </ul>
+</nav>
 	<form action="/board/list" method="get" style = "text-align:center;">
 		<input type="text" name="keyword"  placeholder="검색어 입력해라" value="${keyword }">
 		<input type="submit" value="검색">
 	</form>
-	
+	${btnMaker }
 	<!-- 모달 코드는 작성이 안되어 있는게 아니고
 	작성은 해뒀지만 css의 display옵션을 none으로 평상시에 두고
 	특정한 요건을 만족했을떄만 display를 허용하도록 설계되어 있습니다

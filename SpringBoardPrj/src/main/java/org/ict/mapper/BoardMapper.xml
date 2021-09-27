@@ -70,5 +70,7 @@
 		]]>
 	</select>
 
-
+	<select id="boardCount" resultType="int">
+		SELECT COUNT(*) FROM board_tbl
+	</select>
 </mapper>

@@ -79,4 +79,9 @@ public class BoardServiceImpl implements BoardService{
 		return listPaging;
 	}
 
+	@Override
+	public int boardCount() {
+		return mapper.boardCount();
+	}
+
 }
