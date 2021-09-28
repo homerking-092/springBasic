@@ -5,6 +5,7 @@ import java.util.List;
 import org.ict.domain.BoardVO;
 import org.ict.domain.Criteria;
 import org.ict.domain.PageDTO;
+import org.ict.domain.SearchCriteria;
 import org.ict.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,14 +49,17 @@ public class BoardController {
 	// 기존에 반던 자료에 더해서, Criteria를 추가로 더 입력받습니다
 	@GetMapping("/list")
 	// Criteria를 파라미터에 선언해 pageNum, amount 처리
-	public void list(Model model, Criteria cri) {
+	public void list(Model model, SearchCriteria cri) {
 		log.info("list 로직");
+		log.info("한글 키워드 확인 : " + cri);
+		
 		
 		// pageNum, amount로 전달된 자료를 활용해 게시글 목록을 가져오기
 		List<BoardVO> paging = service.getListPaging(cri);
 		
+		
 		// 페이지 정보를 얻기 이전에 전체 글 갯수를 가져옴
-		int total = service.boardCount();
+		int total = service.boardCount(cri);
 		
 		// 페이지 밑에 깔아줄 페이징버튼 관련 정보 생성
 		// 단순히 페이지버튼 깔리는지 여부를 테스트할 때는
@@ -68,6 +72,8 @@ public class BoardController {
 		
 		model.addAttribute("list", paging);
 		// 버튼 정보도 같이 넘겨줌
+		// btnMaker를 넘기면 동시에 SearchVriteria도 같이 넘어감
+		// 
 		model.addAttribute("btnMaker", btnMaker);
 		
 		// board/list.jsp로 자동연결이 되므로

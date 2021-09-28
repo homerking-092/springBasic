@@ -17,8 +17,7 @@
 	<h1>전체 게시글 조회</h1>
 	
 	<a href="/board/register"><input type="button" value="글쓰기" style="float: right;"></a>
-	<table
-		class="table table-secondary table-striped table-sm table-striped table-hover">
+	<table class="table table-secondary table-striped table-sm table-striped table-hover">
 		<tr>
 			<th>번호</th>
 			<th>제목</th>
@@ -47,7 +46,7 @@
   	btnMaker의 prev가 true일떄만 뒤로가기 버튼 출력-->
   	<c:if test="${btnMaker.prev }">
   		<li class="page-item">
-      <a class="page-link" href="/board/list?pageNum=${btnMaker.startPage -1 }" aria-label="Previous">
+      <a class="page-link" href="/board/list?pageNum=${btnMaker.startPage -1 }&searchType=${btnMaker.cri.searchType}&keyword=${btnMaker.cri.keyword}" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
@@ -63,14 +62,14 @@
     <c:forEach var="pageNum" begin="${btnMaker.startPage }" end="${btnMaker.endPage }">
     <!-- 3. 현재 조회중 페이지 강조는 class 속성 내에서 삼항연산자를 이용해도 된다 -->
     <li class="page-item ${btnMaker.cri.pageNum == pageNum ? 'active' : ''}">
-    <a class="page-link" href="/board/list?pageNum=${pageNum }">${pageNum }</a>
+    <a class="page-link" href="/board/list?pageNum=${pageNum }&searchType=${btnMaker.cri.searchType}&keyword=${btnMaker.cri.keyword}">${pageNum }</a>
     </li>
     </c:forEach>
     
     <!-- next 버튼 -->
     <c:if test="${btnMaker.next }">
     <li class="page-item">
-      <a class="page-link" href="/board/list?pageNum=${btnMaker.endPage + 1 }" aria-label="Next">
+      <a class="page-link" href="/board/list?pageNum=${btnMaker.endPage + 1 }&searchType=${btnMaker.cri.searchType}&keyword=${btnMaker.cri.keyword}" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
       </a>
     </li>
@@ -78,7 +77,33 @@
   </ul>
 </nav>
 	<form action="/board/list" method="get" style = "text-align:center;">
-		<input type="text" name="keyword"  placeholder="검색어 입력해라" value="${keyword }">
+	<select name="searchType">
+		<option value="n" <c:out value="${btnMaker.cri.searchType == null ? 'selected' : '' }"/>>
+			-
+		</option>
+		<option value="t" <c:out value="${btnMaker.cri.searchType eq 't' ? 'selected' : '' }"/>>
+			제목
+		</option>
+		<option value="c" <c:out value="${btnMaker.cri.searchType eq 'c' ? 'selected' : '' }"/>>
+			내용
+		</option>
+		<option value="w" <c:out value="${btnMaker.cri.searchType eq 'w' ? 'selected' : '' }"/>>
+			글쓴이
+		</option>
+		<option value="tc" <c:out value="${btnMaker.cri.searchType eq 'tc' ? 'selected' : '' }"/>>
+			제목 + 내용
+		</option>
+		<option value="cw" <c:out value="${btnMaker.cri.searchType eq 'cw' ? 'selected' : '' }"/>>
+			내용 + 글쓴이
+		</option>
+		<option value="tw" <c:out value="${btnMaker.cri.searchType eq 'tw' ? 'selected' : '' }"/>>
+			제목 + 글쓴이
+		</option>
+		<option value="tcw" <c:out value="${btnMaker.cri.searchType eq 'tcw' ? 'selected' : '' }"/>>
+			제목 + 내용 + 글쓴이
+		</option>
+	</select>
+		<input type="text" name="keyword"  placeholder="검색어 입력해라" value="${btnMaker.cri.keyword }">
 		<input type="submit" value="검색">
 	</form>
 	${btnMaker }
