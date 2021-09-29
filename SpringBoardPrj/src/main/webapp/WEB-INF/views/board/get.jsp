@@ -26,10 +26,23 @@
 			<td>${get.writer }</td>
 		</tr>
 	</table>
-	<a href="/board/list"><input type="button" value="목록으로"></a>
+	<a href="/board/list?pageNum=${param.pageNum }&searchType=${param.searchType}&keyword=${param.keyword}"><input type="button" value="목록으로"></a>
+	<%--  pageNum, searchType, keyword등이 들어오는지 여부 디버깅
+	EL의 ${param.파라미터명}을 이용해 확인가능
+	get 파라미터에 SearchCriteria를 선언해서 처리해도 되지만
+	pageNum, searchType, keyword가 DB와 연계된 작업을 하지 않으므로
+	굳이 두 군데를 고치지 않고 get.jsp에서 바로 받아 쓸 수 있도록 아래와 같이 활용하는게 효율적 --%>
+		<p>	
+			페이지번호: ${param.pageNum }
+			검색조건: ${param.searchType }
+			키워드: ${param.keyword }
+		</p>
 	<%-- 수정페이지로 넘어가는 버튼 추가 --%>
 	<form action="/board/boardmodify" method="post">
 		<input type="hidden" name="bno" value="${get.bno }">
+		<input type="hidden" name="pageNum" value="${param.pageNum }">
+		<input type="hidden" name="searchType" value="${param.searchType }">
+		<input type="hidden" name="keyword" value="${param.keyword }">
 		<input type="submit" value="수정하기">
 	</form>
 	<%-- 글 삭제용 버튼
