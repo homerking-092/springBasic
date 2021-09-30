@@ -79,6 +79,6 @@ public class BoardServiceTests {
 	public void testPaging() {
 		Criteria cri =new Criteria(200, 20);
 		
-		service.getListPaging(cri);
+//		service.getListPaging(cri);
 	}
 }

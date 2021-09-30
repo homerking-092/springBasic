@@ -81,7 +81,7 @@ public class BoardMapperTests {
 		Criteria cri = new Criteria(5, 10);
 		
 		// getListPaging을 호출할 떄 Criteria가 필요하므로 위에 선언
-		mapper.getListPaging(cri);
+//		mapper.getListPaging(cri);
 		
 	}
 	
