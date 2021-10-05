@@ -1,21 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <style>
-	#modDiv{
-		width: 300px;
-		height: 100px;
-		background-color: green;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		margin-top: -50px;
-		margin-left: -150px;
-		padding: 10px;
-		z-index: 1000;
-	}
+#modDiv {
+	width: 300px;
+	height: 100px;
+	background-color: green;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -50px;
+	margin-left: -150px;
+	padding: 10px;
+	z-index: 1000;
+}
 </style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -23,7 +23,7 @@
 <body>
 
 	<h2>Ajax테스트</h2>
-	
+
 	<div>
 		<div>
 			REPLYER <input type="text" name="replyer" id="newReplyWriter">
@@ -33,11 +33,11 @@
 		</div>
 		<button id="replyAddBtn">ADD REPLY</button>
 	</div>
-	
+
 	<ul id="replies">
-	
+
 	</ul>
-	
+
 	<!-- 모달 요소는 안 보이기 때문에 어디 넣어도 되지만 보통 html요소들 끼리 놨을떄
 	제일 아래쪽에 작성하는 경우가 많음 -->
 	<div id="modDiv" style="display: none;">
@@ -51,11 +51,12 @@
 			<button type="button" id="closeBtn">닫기</button>
 		</div>
 	</div>
-	
-	
-	
+
+
+
 	<!-- jquery -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 	<!-- 코드는 위에서 아래로 실행되므로 ajax 스크립트 태그는 맨 아래에 -->
 	<script type="text/javascript">
@@ -63,6 +64,8 @@
 
 		//////////////////////////////////////////////////////////
 		// 비동기 코드
+		
+		// 글쓰기 로직
 		$("#replyAddBtn").on("click", function () {
 			// 각 input태그에 들어있던 글쓴이, 본문의 value값을 변수에 저장
 			var replyer = $("#newReplyWriter").val();
@@ -93,6 +96,65 @@
 			});
 		});
 		
+		// 글삭제 로직
+		$("#replyDelBtn").on("click", function () {
+			// 삭제에 필요한 댓글번호 모달 타이틀 부분에서 얻기
+			var rno = $(".modal-title").html();
+			var reply = $("#reply").val();
+			
+			$.ajax({
+				type : 'delete',
+				url : 'replies/' + rno,
+				
+				// 삭제로직은 rno만 전달함
+				// 호출타입 delete, url정보 이외엔 처리할게 없음
+				header : {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "DELETE"
+				},
+				dataType : 'text',
+				success : function (result) {
+					console.log("result: " + result);
+					if (result === 'SUCCESS') {		// 문자열은 === 로 비교
+						alert("삭제 되었습니다");
+						$("#modDiv").hide("slow");
+						getAllList();
+					}
+				}
+			});
+			
+		});
+		
+		// 글수정 로직(rno, reply 필요)
+		$("#replyModBtn").on("click", function () {
+			// rno(수정에 필요한 댓글번호 모달 타이틀 부분에서 얻기)
+			var rno = $(".modal-title").html();
+			// 수정에 필요한 본문내역을 #reply의 value 값으로 얻기
+			var reply = $("#reply").val();
+			
+			$.ajax({
+				type : 'put',		// patch 대신 put으로 대체가능
+				url : '/replies/' + rno,
+				headers : {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "PUT"		// type이 put이면 patch를 put으로 변경
+				},
+				dataType : 'text',
+				data : JSON.stringify({reply : reply}),
+				success : function (result) {
+					if (result === 'SUCCESS') {
+						alert(rno + "번 댓글이 수정되었습니다");
+						// 댓글 수정 후 모달창 닫고 새 댓글목록 갱신
+						$("#modDiv").hide("slow");
+						getAllList();
+					}
+				}
+			});
+		});
+		
+		
+		
+		
 		// 이벤트 위임
 		// 내가 현재 이벤트를 걸려는 집단(button)을 포함하면서 범위가 제일 좁은
 		// #replies로 시작조건을 찾습니다
@@ -115,7 +177,9 @@
 			$("#modDiv").show("slow");		// 창에 애니메이션 효과 넣기
 			
 			
-		})
+		});
+		
+		
 		
 		
 		///////////////////////////////////////////////////////////////////
@@ -156,6 +220,6 @@
 		getAllList();
 		
 	</script>
-	
+
 </body>
 </html>

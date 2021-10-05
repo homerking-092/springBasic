@@ -17,7 +17,7 @@
 	<h1>전체 게시글 조회</h1>
 	
 	<a href="/board/register"><input type="button" value="글쓰기" style="float: right;"></a>
-	<table class="table table-secondary table-striped table-sm table-striped table-hover">
+	<table class="table table-secondary  table-sm ">
 		<tr>
 			<th>번호</th>
 			<th>제목</th>
