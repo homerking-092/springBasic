@@ -21,8 +21,19 @@
 		WHERE rno = #{rno}
 	</update>
 	
+	<!-- 리플 하나 삭제 -->
 	<delete id="delete">
 		DELETE FROM reply_tbl
 		WHERE rno = #{rno}
 	</delete>
+	
+	<!-- 게시글 삭제시 모든 리플 삭제 -->
+	<delete id="allDelete">
+		DELETE FROM reply_tbl
+		WHERE bno = #{bno}
+	</delete>
+	
+	<select id="getBno" resultType="long">
+		SELECT bno FROM reply_tbl WHERE rno = #{rno}
+	</select>
 </mapper>

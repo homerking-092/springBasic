@@ -6,8 +6,10 @@ import org.ict.domain.BoardVO;
 import org.ict.domain.Criteria;
 import org.ict.domain.SearchCriteria;
 import org.ict.mapper.BoardMapper;
+import org.ict.mapper.ReplyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -21,6 +23,10 @@ public class BoardServiceImpl implements BoardService{
 
 	@Autowired
 	private BoardMapper mapper;
+	
+	/////////
+	@Autowired
+	private ReplyMapper replyMapper;
 	
 	// 등록작업시 BoardVO를 매개로 실행하기 때문에
 	// 아래와 같이 BoardVO를 파라미터에 설정해둠
@@ -45,10 +51,12 @@ public class BoardServiceImpl implements BoardService{
 		mapper.update(vo);
 	}
 
+	@Transactional
 	@Override
 	public void remove(Long bno) {
+		//////////////////////////////// 글 삭제시 리플도 같이 삭제
+		replyMapper.allDelete(bno);
 		mapper.delete(bno);
-		
 	}
 
 	// 글 전체 목록을 가져오는 로직을 작성

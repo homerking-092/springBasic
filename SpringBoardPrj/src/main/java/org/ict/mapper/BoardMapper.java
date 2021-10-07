@@ -2,6 +2,7 @@ package org.ict.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 //import org.apache.ibatis.annotations.Select;
 import org.ict.domain.BoardVO;
 import org.ict.domain.Criteria;
@@ -51,6 +52,7 @@ public interface BoardMapper {
 	// SearchCriteria가 검색조건에 대한 정보를 담고 있음
 	public int boardCount(SearchCriteria cri);
 	
-	
+	// 댓글 썼을때 board_tbl 컬럼의 replycount를 증가시키는 메서드
+	public void updateReplyCount(@Param ("bno") Long bno, @Param("amount") Long amount);
 	
 }

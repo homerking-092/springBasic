@@ -70,6 +70,8 @@ public class BoardController {
 		// DB에서 그떄그때 조회해 온 총글 갯수를 넣도록 코드 추정
 		PageDTO btnMaker = new PageDTO(cri, total, 10);
 		
+//		Long replycnt = service.
+		
 		model.addAttribute("list", paging);
 		// 버튼 정보도 같이 넘겨줌
 		// btnMaker를 넘기면 동시에 SearchVriteria도 같이 넘어감
