@@ -7,13 +7,42 @@
 		http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+	<bean id="customAccessDenied" class="org.ict.security.CustomAccessDeniedHandler"/>
+	<bean id="customLoginSuccess" class="org.ict.security.CustomLoginSuccessHandler"/>
+
 	<!-- http 영역 -->
+	<!-- <security:http auto-config="true" use-expressions="true"> -->
 	<security:http>
-		<security:form-login />
+	
+		<!-- /secu/all 접속시 모둔 유저에게 접근 허용 -->
+		<security:intercept-url pattern="/secu/all" access="permitAll"/>
+		
+		<!-- /secu/member는 Member에게만 접근 허용 -->
+		<security:intercept-url pattern="/secu/member" access="hasRole('ROLE_MEMBER')"/>
+		
+		<!-- /secu/admin은 admin에게만 접근 허용 -->
+		<security:intercept-url pattern="/secu/admin" access="hasRole('ROLE_ADMIN')"/>
+	
+		<security:form-login login-page="/customLogin"
+			authentication-success-handler-ref="customLoginSuccess"/>
+		
+	<!--  	<security:access-denied-handler error-page="/accessError"/> -->		<!-- 에러가 터지면 컨트롤러 이 주소로 보내라 -->
+		<security:access-denied-handler ref="customAccessDenied"/>	<!-- 위에 bean에 생성한 customAccessDenied -->
+		
+		<security:logout logout-url="/customLogout" invalidate-session="true"/>
+		
 	</security:http>
 
 	<!-- 인증영역 -->
 	<security:authentication-manager>
+	
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="member" password="{noop}member" authorities="ROLE_MEMBER"/>
+				<security:user name="admin" password="{noop}admin" authorities="ROLE_MEMBER,ROLE_ADMIN"/>
+				
+			</security:user-service>
+		</security:authentication-provider>
 
 	</security:authentication-manager>
 

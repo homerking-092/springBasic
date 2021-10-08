@@ -9,5 +9,6 @@
 <body>
 
 	<h1>admin 주소</h1>
+	<a href="/customLogout" ><button>로그아웃 페이지 이동</button></a>
 </body>
 </html>

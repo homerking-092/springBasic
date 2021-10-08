@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,5 +9,6 @@
 <body>
 
 	<h1>member 주소</h1>
+	<a href="/customLogout"><button> 로그아웃 페이지 이동</button></a>
 </body>
 </html>
