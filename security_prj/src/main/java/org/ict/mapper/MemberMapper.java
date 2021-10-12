@@ -8,6 +8,6 @@ public interface MemberMapper {
 	public MemberVO read(String userid);
 	
 	public void userJoin(MemberVO vo);
-	public void insertAuth(AuthVO vo);
+	
 	
 }
