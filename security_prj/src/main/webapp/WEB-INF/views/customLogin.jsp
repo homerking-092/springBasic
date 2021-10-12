@@ -16,6 +16,7 @@
 	<form action="/login" method="post">
 		ID :<input type="text" name="username" placeholder="아이디 입력해라"><br>
 		PW :<input type="text" name="password" placeholder="비번 입력해라"><br>
+		자동로그인: <input type="checkbox" name="remember-me"><br>
 		<input type="submit" value="로그인">
 		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
 	</form>

@@ -36,4 +36,9 @@
   		WHERE m.userid = #{userid}
   	</select>
   	
+  	<insert id="userJoin">
+  		INSERT INTO member_tbl (userid, userpw, username, regdate, updatedate, enabled)
+  		VALUES (#{userid}, #{userpw}, #{username}, sysdate(), sysdate())
+  	</insert>
+  	
   </mapper>
