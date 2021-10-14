@@ -3,6 +3,25 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style type="text/css">
+	.uploadResult{
+		width: 100%;
+		background-color: gray;
+	}
+	.uploadResult ul{
+		display: flex;
+		flex-flow: row;
+		justify-content: center;
+		align-items: center;
+	}
+	.uploadResult ul li{
+		list-style: none;		
+		padding: 10px;
+	}
+	.uploadResult ul li img{
+		width: 20px;
+	}
+</style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
@@ -12,6 +31,12 @@
 
 	<div class="uploadDiv">
 		<input type="file" name="uploadFile" multiple>
+	</div>
+	
+	<div class="uploadResult">
+		<ul>
+			<!-- 업로드된 파일이 들어갈 자리 -->
+		</ul>
 	</div>
 
 	<button id="uploadBtn">Upload</button>
@@ -39,6 +64,10 @@
 				return true;
 			}
 
+			// 업로드시 파일 선택을 초기화시키기 위해 미리 업로드되지 않은
+			// .uploadDiv를 깊은복사로 복사해둠
+			var cloneObj = $(".uploadDiv").clone();
+			
 			$('#uploadBtn').on("click", function(e) {
 
 				// ajax는 제출버튼을 눌렀을때 목적지가 없기 때문에
@@ -60,6 +89,7 @@
 					}
 					formData.append("uploadFile", files[i]);
 				}
+				console.log(formData);
 
 				// 비동기요청
 				$.ajax({
@@ -68,13 +98,94 @@
 					contentType : false,
 					data : formData,
 					type : 'POST',
+					dataType: 'json',	// 입력시 json으로 콘솔에, 안입력하면 xml로 콘솔에 찍힘
 					success : function(result) {
-						alert("uploaded");
+						console.log(result);	// 내가 업로드한 파일 내역이 콘솔에 찍히나 디버깅
+						// alert("uploaded");
+						
+						// 업로드된 그림파일 목록을 ul내부에 리스트로 입력
+						showUploadedFile(result);
+						
+						// 세팅되어있던 파일이 업로드되면서 목록에서 사라지게 처리
+						$(".uploadDiv").html(cloneObj.html());
 					}
 				});// $.ajax
-
-			});
-		});
+			});	// onclick uploadBtn
+			
+			var uploadResult = $(".uploadResult ul");
+			
+			function showUploadedFile(uploadResultArr) {
+				var str = "";
+				
+				// i는 인덱스번호(0, 1, 2....) obj 그림파일 정보가 담긴 json
+				$(uploadResultArr).each(function (i, obj) {
+					
+					console.log("------------------");
+					console.log(i);
+					console.log(obj);
+					console.log("-------------------");
+					
+					if (!obj.image) {
+						
+						var fileCallPath = encodeURIComponent(
+							obj.uploadPath + "/"
+						   + obj.uuid + "_" +obj.fileName);
+						
+						// 그림이 아니면 썸네일대신 resources폴더 내 이미지를 대체로 표시
+						str += "<li><a href='/download?fileName=" + fileCallPath
+							+"'><img src = '/resources/attach.png'>"	/// 이미지파일 경로 고정
+							+ obj.fileName + "</a>"
+							+ "<span data-file=\'" + fileCallPath + "\' data-type='file'> X </span>"
+							+ "</li>";
+					} else {
+						// str += "<li>" + obj.fileName + "</li>";
+						// 파일이름 + 썸네일을 보여주기 위해 썸네일 주소 요청하게 만들기
+						
+						// 수정코드
+						/// 섬네일 다운
+						var fileCallPath = encodeURIComponent(obj.uploadPath
+								+ "/s_" + obj.uuid + "_" + obj.fileName);
+						/// 원본 다운
+						var fileCallPath2 = encodeURIComponent(obj.uploadPath
+								+ "/" + obj.uuid + "_" + obj.fileName);
+						
+						// 원래 그냥 fileCallPath를 조립해서
+						str += "<li><a href='/download?fileName=" + fileCallPath2
+							+"'><img src= '/display?fileName="
+							+fileCallPath +"'> " + obj.fileName + "</a>"
+							+ "<span data-file=\'" + fileCallPath + "\' data-type='image'> X </span>"
+							+ "</li>";
+					}
+					
+				});
+				
+				uploadResult.append(str);
+			}// showUploadedFile
+			
+			$(".uploadResult").on("click", "span", function (e) {
+				
+				console.log($(e));
+				
+				console.log($(this));				
+				var targetFile = $(this).data("file");
+				var type = $(this).data("type");
+				console.log(targetFile + "///" + type);
+				
+				var targetLi = $(this).closest("li");
+				console.log(targetLi);
+				$.ajax({
+					url : '/deleteFile',
+					data : {fileName : targetFile, type:type},
+					dataType : 'text',
+					type : 'POST',
+					success : function(result){
+						alert(result);
+						targetLi.remove();
+					}
+					
+				});	//end $.ajax
+			});	// end click span
+		});// end document
 	</script>
 </body>
 </html>
