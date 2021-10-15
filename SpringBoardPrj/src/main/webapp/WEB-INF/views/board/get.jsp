@@ -16,7 +16,32 @@
 	margin-left: -150px;
 	padding: 10px;
 	z-index: 1000;
+}	
+	
+/* uploadResult 결과물 css*/
+.uploadResult{
+	width: 100%;
+	background-color: gray;
 }
+
+.uploadResult ul{
+	display: flex;
+	flex-flow: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.uploadResult ul li{
+	list-style: none;
+	padding: 10px;
+	align-content: center;
+	text-align: center;
+}
+
+.uploadResult ul li img{
+	width: 100px;
+}
+	
 </style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -72,7 +97,15 @@
 		<input type="button" value="삭제하기" onclick="confirm_delete();">
 	</form>
 	
-	
+	<!-- 첨부파일 추가 -->
+	<div class="row">
+		<h3 class="text-primary">첨부파일</h3>
+		<div id="uploadResult">
+			<ul>
+				<!-- 첨부파일 들어갈 위치 -->
+			</ul>
+		</div>	
+	</div>
 	
 	<hr>
 	<h2>댓글 영역</h2>
@@ -301,6 +334,49 @@ function getAllList()를 test.jsp에서 복붙해서 게시물별 페이지에�
 		
 		}
 		getAllList();
+		
+		
+		//////////////////
+		////////////////////
+		///////////////////////
+		// 파일업로드 불러오기
+		(function () {
+			$.getJSON("/board/getAttachList", {bno: bno}, function (arr) {
+				console.log(arr);
+				
+				// ul 태그 내부에 태그를 추가해야하기 떄문에 문자열 이용
+				var str = "";
+				
+				// i, obj와 같은데 변수명만 i, attach로 바꿈
+				$(arr).each(function (i, attach) {
+					// image type
+					if (attach.image) {
+						var fileCallPath = encodeURIComponent(attach.uploadPath + "/s_" + 
+								attach.uuid + "_" + attach.fileName);
+						
+						str += "<li data-path='" + attach.uploadPath + "' gata-uuid='"
+							+ attach.uuid + "' data-filename'" + attach.fileName
+							+ "' data-type='" + attach.image + "'><div>"
+							+ "<img src='/display?fileName=" + fileCallPath + "'>"
+							+ "</div>"
+							+ "</li>";
+					} else {
+						str += "<li data-path='" + attach.uploadPath + "' gata-uuid='"
+						+ attach.uuid + "' data-filename'" + attach.fileName
+						+ "' data-type='" + attach.image + "'><div>"
+						+ "<span>" + attachfilename + "</span><br>"
+						+ "<img src='/resources/attach.png' width='100px' height='100px'>"
+						+ "</div>"
+						+ "</li>";
+					}
+				});
+				
+				$("#uploadResult ul").html(str);
+				
+			});	// end getJSON
+		})(); // end anonymous function & call function()
+		
+	
 			
 	</script>
 	 

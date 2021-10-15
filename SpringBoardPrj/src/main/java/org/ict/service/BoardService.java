@@ -2,6 +2,7 @@ package org.ict.service;
 
 import java.util.List;
 
+import org.ict.domain.BoardAttachVO;
 import org.ict.domain.BoardVO;
 import org.ict.domain.Criteria;
 import org.ict.domain.SearchCriteria;
@@ -36,4 +37,7 @@ public interface BoardService {
 	
 	// 전체 글 개수 가져오기
 	public int boardCount(SearchCriteria cri);
+	
+	// 게시물 접속시 딸린 첨부자료 가져오기
+	public List<BoardAttachVO> getAttachList(Long bno);
 }

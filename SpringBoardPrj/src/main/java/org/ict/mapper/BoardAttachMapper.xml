@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="org.ict.mapper.BoardAttachMapper">
+  	
+  	<insert id="insert">
+  		INSERT INTO img_tbl (uuid, uploadpath, filename, image, bno)
+  		VALUES (#{uuid}, #{uploadPath}, #{fileName}, #{image}, #{bno})
+  	</insert>
+  	
+  	<delete id="delete">
+  		DELETE FROM img_tbl WHERE uuid = #{uuid}
+  	</delete>	
+  	
+  	<select id="findByBno" resultType="org.ict.domain.BoardAttachVO">
+  		SELECT * FROM img_tbl WHERE bno = #{bno}
+  	</select>
+  </mapper>

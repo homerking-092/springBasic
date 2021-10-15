@@ -2,9 +2,11 @@ package org.ict.service;
 
 import java.util.List;
 
+import org.ict.domain.BoardAttachVO;
 import org.ict.domain.BoardVO;
 import org.ict.domain.Criteria;
 import org.ict.domain.SearchCriteria;
+import org.ict.mapper.BoardAttachMapper;
 import org.ict.mapper.BoardMapper;
 import org.ict.mapper.ReplyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +30,31 @@ public class BoardServiceImpl implements BoardService{
 	@Autowired
 	private ReplyMapper replyMapper;
 	
+	@Autowired
+	private BoardAttachMapper attachmapper;
+	
 	// 등록작업시 BoardVO를 매개로 실행하기 때문에
 	// 아래와 같이 BoardVO를 파라미터에 설정해둠
 	// BoardServiceTests에 VO를 생성해 테스트 ㄱㄱ
+	
+	@Transactional
 	@Override
 	public void register(BoardVO vo) {
 		log.info("등록작업 실행");
+		// mapper.insert(vo); 에서 bno를 얻기위해 변경
 		mapper.insertSelectKey(vo);
+		
+		// 첨부파일이 존재하지 않는다면
+		if (vo.getAttachList() == null || vo.getAttachList().size() <= 0) {
+			return;
+		}
+		vo.getAttachList().forEach(attach ->{
+			// 첨부파일이 위치할 글 번호를 입력해준 다음
+			attach.setBno(vo.getBno());
+			// DB에 첨부파일 관련 정보 입력
+			attachmapper.insert(attach);
+			
+		});
 	}
 
 	// 전체 글을 다 가져오는게 아닌 특정 글 하나만 가져오는 로직
@@ -91,6 +111,12 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public int boardCount(SearchCriteria cri) {
 		return mapper.boardCount(cri);
+	}
+
+	@Override
+	public List<BoardAttachVO> getAttachList(Long bno) {
+		log.info("get Attach List: " + bno);
+		return attachmapper.findByBno(bno);
 	}
 
 }
