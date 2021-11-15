@@ -9,5 +9,9 @@ public interface MemberMapper {
 	
 	public void userJoin(MemberVO vo);
 	
+//	public void insertMemberTbl(MemberVO vo);
+	
+//	public void insertMemberAuth(MemberVO vo);
+	
 	
 }

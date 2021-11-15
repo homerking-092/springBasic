@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.ict.mapper.AuthMapper">
+
+	<insert id="insertAuth">
+		INSERT INTO member_auth (userid, auth)
+		VALUES(#{userid}, #{auth})
+	</insert>
+
+	<select id="read" resultType="org.ict.domian.AuthMapper">
+		SELECT * FROM member_auth
+	</select>
+</mapper>
   
-  <mapper namespace="org.ict.mapper.AuthMapper">
-  
-  <insert id="insertAuth">
-  		INSERT INTO member_auth (userid, auth)
-  		VALUES(#{userid}, #{auth})
-  	</insert>
-  </mapper>

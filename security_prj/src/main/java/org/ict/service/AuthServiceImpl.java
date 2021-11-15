@@ -16,4 +16,9 @@ public class AuthServiceImpl implements AuthService {
 		
 	}
 
+	@Override
+	public void read(AuthVO vo) {
+		mapper.read(vo);
+	}
+
 }
